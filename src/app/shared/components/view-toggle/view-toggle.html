@@ -1,0 +1,17 @@
+<div class="inline-flex rounded-lg border border-slate-300 overflow-hidden">
+  <button
+    type="button"
+    class="px-4 py-2 text-sm font-medium transition-colors"
+    [class]="view() === 'task' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-100'"
+    (click)="view.set('task')">
+    Par tâche
+  </button>
+
+  <button
+    type="button"
+    class="px-4 py-2 text-sm font-medium transition-colors border-l border-slate-300"
+    [class]="view() === 'user' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 hover:bg-slate-100'"
+    (click)="view.set('user')">
+    Par user
+  </button>
+</div>

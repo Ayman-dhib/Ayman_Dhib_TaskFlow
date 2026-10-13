@@ -1,0 +1,49 @@
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Project } from '../../models/project.model';
+import { ProjectCard } from '../project-card/project-card';
+import { ProjectService } from '../../../../core/services/project.service';
+
+@Component({
+  selector: 'app-project-list',
+  imports: [ProjectCard, FormsModule],
+  templateUrl: './project-list.html',
+  styleUrl: './project-list.css',
+})
+export class ProjectList implements OnInit {
+  private projectService = inject(ProjectService);
+
+  projects = signal<Project[]>([]);
+  searchTerm = signal('');
+
+  filteredProjects = computed(() => {
+    const term = this.searchTerm().trim().toLowerCase();
+    return this.projects().filter(p => p.name.toLowerCase().includes(term));
+  });
+
+  ngOnInit(): void {
+    this.projectService.getProjects().subscribe(projects => {
+      this.projects.set(projects);
+    });
+  }
+
+  addProject(): void {
+    this.projects.update(list => {
+      const nextId = list.length ? Math.max(...list.map(p => p.id)) + 1 : 1;
+      return [
+        {
+          id: nextId,
+          name: `Projet ${nextId}`,
+          description: 'Nouveau projet',
+          status: 'En attente',
+          tasks: [],
+          startDate: new Date().toISOString().slice(0, 10),
+          budget: 0,
+        },
+        ...list,
+      ];
+    });
+    this.searchTerm.set('');
+  }
+
+}

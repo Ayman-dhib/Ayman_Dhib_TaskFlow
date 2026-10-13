@@ -1,0 +1,8 @@
+<div class="mt-3">
+  <h4 class="text-sm font-semibold text-slate-700 mb-2">
+    {{ projectName() }}
+    <span class="ml-1 text-xs font-normal text-slate-500">({{ tasks().length }})</span>
+  </h4>
+
+  <app-task-list [tasks]="tasks()" [showAssignee]="false" />
+</div>

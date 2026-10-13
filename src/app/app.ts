@@ -1,12 +1,14 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ViewToggle, ViewMode } from './shared/components/view-toggle/view-toggle';
+import { ProjectList } from './features/projects/components/project-list/project-list';
+import { UserList } from './features/users/components/user-list/user-list';
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
-  styleUrl: './app.css',
+  imports: [ViewToggle, ProjectList, UserList],
   templateUrl: './app.html',
+  styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('TaskFlow');
+  currentView = signal<ViewMode>('task');
 }
