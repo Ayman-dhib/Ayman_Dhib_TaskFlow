@@ -41,5 +41,5 @@
     }
   </div>
 
-  <app-task-list [tasks]="project().tasks | slice:0:3" />
+  <app-task-list [tasks]="project().tasks" [showAssignee]="true" | slice:0:3 />
 </div>

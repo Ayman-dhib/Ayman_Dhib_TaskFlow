@@ -4,5 +4,5 @@
     <span class="ml-1 text-xs font-normal text-slate-500">({{ tasks().length }})</span>
   </h4>
 
-  <app-task-list [tasks]="tasks()" [showAssignee]="false" />
+  <app-task-list [tasks]="group.tasks" [showAssignee]="false" />
 </div>

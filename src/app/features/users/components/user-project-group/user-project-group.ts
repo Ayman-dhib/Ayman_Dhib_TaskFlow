@@ -11,4 +11,5 @@ import { TaskList } from '../../../projects/components/task-list/task-list';
 export class UserProjectGroup {
   projectName = input.required<string>();
   tasks = input.required<Task[]>();
+  group: any;
 }

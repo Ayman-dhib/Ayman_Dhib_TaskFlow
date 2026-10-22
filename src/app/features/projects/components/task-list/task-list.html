@@ -1,42 +1,12 @@
-@if (tasks().length === 0) {
-  <p class="text-sm italic text-slate-400">Aucune tâche.</p>
-} @else {
-  <ul class="space-y-2">
-    @for (task of tasks(); track task.id) {
-      <li class="border-l-4 rounded-md px-3 py-2"
-          [ngClass]="statusBorder[task.status]"
-          appHighlight
-          appOverdue
-          [dueDate]="task.dueDate"
-          [done]="task.status === 'Terminé'">
-        <p class="text-sm font-medium text-slate-800"
-           [class.line-through]="task.status === 'Terminé'"
-           [class.text-slate-400]="task.status === 'Terminé'">
-          {{ task.title }}
-        </p>
-        <div class="mt-1 flex items-center gap-2 text-xs">
-          <span class="px-2 py-0.5 rounded-full font-medium" [ngClass]="priorityBadge[task.priority]">
-            @switch (task.priority) {
-              @case ('Haute') { ▲ Haute }
-              @case ('Moyenne') { ● Moyenne }
-              @default { ▼ Basse }
-            }
-          </span>
-          <span class="text-slate-500">{{ task.status }}</span>
-
-          @if (task.dueDate; as due) {
-            <span class="text-slate-500">{{ due | date:'dd/MM/yyyy' }} · {{ due | deadline }}</span>
-          } @else {
-            <span class="text-slate-400 italic">Aucune échéance</span>
-          }
-
-          @if (task.description) {
-            <span class="text-slate-500" [appTooltip]="task.description">
-              {{ task.description | truncate:40 }}
-            </span>
-          }
-        </div>
-      </li>
-    }
-  </ul>
-}
+<ul class="space-y-2">
+  @for (task of tasks(); track task.id) {
+    <li>
+      <app-task-item
+        [task]="task"
+        [showAssignee]="showAssignee()"
+        [assigneeName]="getAssigneeName(task.assigneeId)" />
+    </li>
+  } @empty {
+    <li class="text-sm italic text-slate-400">Aucune tâche.</li>
+  }
+</ul>
