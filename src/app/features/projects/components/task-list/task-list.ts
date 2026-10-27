@@ -1,5 +1,5 @@
-import { Component, inject, input, signal } from '@angular/core';
-import { Task } from '../../models/task.model';
+import { Component, inject, input, output, signal } from '@angular/core';   // + output
+import { Task, TaskStatus } from '../../models/task.model';                 // + TaskStatus
 import { User } from '../../../users/models/user.model';
 import { UserService } from '../../../../core/services/user.service';
 import { TaskItem } from '../task-item/task-item';
@@ -17,6 +17,9 @@ export class TaskList {
   tasks = input.required<Task[]>();
   showAssignee = input<boolean>(true);
 
+  // NEW: event going up to ProjectCard
+  taskStatusChange = output<{ taskId: number; status: TaskStatus }>();
+
   private users = signal<User[]>([]);
 
   constructor() {
@@ -26,5 +29,10 @@ export class TaskList {
   getAssigneeName(assigneeId?: number): string {
     if (assigneeId === undefined) return 'Non assignée';
     return this.users().find(u => u.id === assigneeId)?.name ?? 'Inconnu';
+  }
+
+  // NEW: called when a TaskItem emits
+  onStatusChange(taskId: number, status: TaskStatus) {
+    this.taskStatusChange.emit({ taskId, status });
   }
 }

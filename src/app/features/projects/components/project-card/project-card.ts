@@ -1,5 +1,6 @@
-import { Component, computed, input } from '@angular/core';   // "output" removed
+import { Component, computed, input, output } from '@angular/core';   // + output
 import { Project, ProjectStatus } from '../../models/project.model';
+import { TaskStatus } from '../../models/task.model';                 // NEW import
 import { TaskList } from '../task-list/task-list';
 import {
   UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe,
@@ -18,6 +19,9 @@ import {
 })
 export class ProjectCard {
   project = input.required<Project>();
+
+  // NEW: event going up to ProjectList, with the projectId added
+  taskStatusChange = output<{ projectId: number; taskId: number; status: TaskStatus }>();
 
   statusClasses: Record<ProjectStatus, string> = {
     'En attente': 'bg-slate-100 text-slate-700',
@@ -50,4 +54,11 @@ export class ProjectCard {
     return result;
   });
 
+  // NEW: receives { taskId, status } from TaskList and adds the projectId
+  onTaskStatusChange(event: { taskId: number; status: TaskStatus }) {
+    this.taskStatusChange.emit({
+      projectId: this.project().id,
+      ...event,
+    });
+  }
 }

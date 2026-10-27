@@ -24,7 +24,12 @@
     <span class="text-slate-500">{{ task().status }}</span>
 
     @if (task().dueDate; as due) {
-      <span class="text-slate-500">{{ due | date:'dd/MM/yyyy' }} · {{ due | deadline }}</span>
+      <span class="text-slate-500">
+        {{ due | date:'dd/MM/yyyy' }}
+        @if (task().status !== 'Terminé') {
+          · {{ due | deadline }}
+        }
+      </span>
     } @else {
       <span class="text-slate-400 italic">Aucune échéance</span>
     }
@@ -39,4 +44,16 @@
   @if (showAssignee()) {
     <p class="mt-1 text-xs text-slate-500">Assigné à : {{ assigneeName() }}</p>
   }
+  <div class="mt-2 h-1 rounded-full bg-slate-200 overflow-hidden">
+  <div class="h-full bg-blue-500 transition-all"
+       [ngStyle]="{ 'width.%': statusProgress[task().status] }"></div>
+  </div>
+
+  <!-- NEW: status change button -->
+  <button
+    type="button"
+    (click)="changeStatus()"
+    class="mt-2 px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700">
+    Changer le statut
+  </button>
 </article>

@@ -1,6 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Project } from '../../models/project.model';
+import { TaskStatus } from '../../models/task.model';                 // NEW import
 import { ProjectCard } from '../project-card/project-card';
 import { ProjectService } from '../../../../core/services/project.service';
 
@@ -46,4 +47,20 @@ export class ProjectList implements OnInit {
     this.searchTerm.set('');
   }
 
+onTaskStatusChange(event: { projectId: number; taskId: number; status: TaskStatus }) {
+  this.projects.update(list =>
+    list.map(project =>
+      project.id !== event.projectId
+        ? project                                   // untouched project: same object
+        : {
+            ...project,                             // NEW project object
+            tasks: project.tasks.map(task =>
+              task.id !== event.taskId
+                ? task                              // untouched task: same object
+                : { ...task, status: event.status } // NEW task object
+            ),
+          }
+    )
+  );
+}
 }

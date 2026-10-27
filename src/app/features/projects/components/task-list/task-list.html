@@ -4,7 +4,8 @@
       <app-task-item
         [task]="task"
         [showAssignee]="showAssignee()"
-        [assigneeName]="getAssigneeName(task.assigneeId)" />
+        [assigneeName]="getAssigneeName(task.assigneeId)"
+        (taskStatusChange)="onStatusChange(task.id, $event)" />
     </li>
   } @empty {
     <li class="text-sm italic text-slate-400">Aucune tâche.</li>

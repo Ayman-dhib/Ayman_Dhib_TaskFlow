@@ -41,5 +41,9 @@
     }
   </div>
 
-  <app-task-list [tasks]="project().tasks" [showAssignee]="true" | slice:0:3 />
+  <!-- CHANGED: the slice pipe is now inside the binding, and the event binding is added -->
+  <app-task-list
+    [tasks]="project().tasks" 
+    [showAssignee]="true"
+    (taskStatusChange)="onTaskStatusChange($event)" />
 </div>

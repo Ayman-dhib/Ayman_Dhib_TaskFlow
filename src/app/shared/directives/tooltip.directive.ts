@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, OnDestroy, Renderer2, inject, isStandalone } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnDestroy, Renderer2, inject } from '@angular/core';
 
 @Directive({
   selector: '[appTooltip]',
