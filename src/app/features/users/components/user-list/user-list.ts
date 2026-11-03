@@ -27,6 +27,7 @@ export class UserList {
   });
 
   constructor() {
+    console.log('UserList → UserList id =', this.userService.id);
     this.userService.getUsers().subscribe(users => this.users.set(users));
     this.projectService.getProjects().subscribe(projects => this.projects.set(projects));
   }

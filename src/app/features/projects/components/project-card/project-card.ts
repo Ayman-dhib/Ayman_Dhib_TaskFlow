@@ -6,6 +6,10 @@ import {
   UpperCasePipe, DatePipe, CurrencyPipe, PercentPipe,
   DecimalPipe, SlicePipe, KeyValuePipe,
 } from '@angular/common';
+import { FavoritesService } from '../../../../core/services/favorites.service';
+import { RecentProjectsService } from '../../../../core/services/recent-projects.service';
+import { inject } from '@angular/core';
+
 
 @Component({
   selector: 'app-project-card',
@@ -18,7 +22,9 @@ import {
   styleUrl: './project-card.css',
 })
 export class ProjectCard {
+  private recentService = inject(RecentProjectsService);
   project = input.required<Project>();
+  favorites = inject( FavoritesService)
 
   // NEW: event going up to ProjectList, with the projectId added
   taskStatusChange = output<{ projectId: number; taskId: number; status: TaskStatus }>();
@@ -61,4 +67,7 @@ export class ProjectCard {
       ...event,
     });
   }
+  open(): void {
+  this.recentService.add(this.project());
+}
 }

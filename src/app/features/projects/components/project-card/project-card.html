@@ -1,11 +1,20 @@
-<div class="bg-white rounded-xl shadow-md p-5 space-y-4 transition hover:shadow-lg">
+<div class="bg-white rounded-xl shadow-md p-5 space-y-4 transition hover:shadow-lg cursor-pointer"
+     (click)="open()">
 
   <div class="flex items-start justify-between gap-3">
     <h2 class="text-lg font-semibold text-slate-800">{{ project().name | uppercase }}</h2>
-    <span class="text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap"
-          [class]="statusClasses[project().status]">
-      {{ project().status }}
-    </span>
+
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap"
+            [class]="statusClasses[project().status]">
+        {{ project().status }}
+      </span>
+
+      <button class="text-xl leading-none"
+              (click)="favorites.toggle(project().id); $event.stopPropagation()">
+        {{ favorites.isFavorite(project().id) ? '★' : '☆' }}
+      </button>
+    </div>
   </div>
 
   <p class="text-sm text-slate-600">{{ project().description }}</p>
@@ -41,9 +50,8 @@
     }
   </div>
 
-  <!-- CHANGED: the slice pipe is now inside the binding, and the event binding is added -->
   <app-task-list
-    [tasks]="project().tasks" 
+    [tasks]="project().tasks"
     [showAssignee]="true"
     (taskStatusChange)="onTaskStatusChange($event)" />
 </div>

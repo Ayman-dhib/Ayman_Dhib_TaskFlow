@@ -4,6 +4,7 @@ import { Project } from '../../models/project.model';
 import { TaskStatus } from '../../models/task.model';                 // NEW import
 import { ProjectCard } from '../project-card/project-card';
 import { ProjectService } from '../../../../core/services/project.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-project-list',
@@ -13,6 +14,12 @@ import { ProjectService } from '../../../../core/services/project.service';
 })
 export class ProjectList implements OnInit {
   private projectService = inject(ProjectService);
+  private notification = inject ( NotificationService)
+
+   constructor() {
+    console.log('ProjectList → ProjectService id =', this.projectService.id);
+  }
+
 
   projects = signal<Project[]>([]);
   searchTerm = signal('');
@@ -45,7 +52,9 @@ export class ProjectList implements OnInit {
       ];
     });
     this.searchTerm.set('');
+    this.notification.show ('Project added !!!')
   }
+
 
 onTaskStatusChange(event: { projectId: number; taskId: number; status: TaskStatus }) {
   this.projects.update(list =>
