@@ -1,0 +1,119 @@
+<h2>{{ isEditMode() ? 'Modifier le projet' : 'Nouveau projet' }}</h2>
+
+<form #projectForm="ngForm" (ngSubmit)="onSubmit(projectForm)" novalidate>
+
+  <!-- ===== Groupe : Informations générales ===== -->
+  <fieldset ngModelGroup="general" #generalGroup="ngModelGroup">
+    <legend>
+      Informations générales
+      <span class="badge" [class.ok]="generalGroup.valid">
+        {{ generalGroup.valid ? 'Valide' : 'Invalide' }}
+      </span>
+    </legend>
+
+    <!-- Nom -->
+    <div class="field">
+      <label for="name">Nom *</label>
+      <input type="text" id="name" name="name"
+             [(ngModel)]="project.name"
+             #nameCtrl="ngModel" required minlength="3" />
+      @if (nameCtrl.invalid && (nameCtrl.touched || nameCtrl.dirty)) {
+        @if (nameCtrl.errors?.['required']) {
+          <small class="error">Le nom est obligatoire.</small>
+        }
+        @if (nameCtrl.errors?.['minlength']) {
+          <small class="error">
+            Le nom doit contenir au moins 3 caractères
+            ({{ nameCtrl.errors?.['minlength']?.['actualLength'] }}/3).
+          </small>
+        }
+      }
+    </div>
+
+    <!-- Description -->
+    <div class="field">
+      <label for="description">Description *</label>
+      <textarea id="description" name="description" rows="4"
+                [(ngModel)]="project.description"
+                #descCtrl="ngModel" required minlength="10"></textarea>
+      @if (descCtrl.invalid && (descCtrl.touched || descCtrl.dirty)) {
+        @if (descCtrl.errors?.['required']) {
+          <small class="error">La description est obligatoire.</small>
+        }
+        @if (descCtrl.errors?.['minlength']) {
+          <small class="error">
+            La description doit contenir au moins 10 caractères
+            ({{ descCtrl.errors?.['minlength']?.['actualLength'] }}/10).
+          </small>
+        }
+      }
+    </div>
+
+    <!-- Statut -->
+    <div class="field">
+      <label for="status">Statut *</label>
+      <select id="status" name="status"
+              [(ngModel)]="project.status"
+              #statusCtrl="ngModel" required>
+        <option value="" disabled>-- Choisir un statut --</option>
+        @for (s of statuts; track s) {
+          <option [value]="s">{{ s }}</option>
+        }
+      </select>
+      @if (statusCtrl.invalid && (statusCtrl.touched || statusCtrl.dirty)) {
+        <small class="error">Veuillez choisir un statut.</small>
+      }
+    </div>
+
+    <!-- Date de début -->
+    <div class="field">
+      <label for="startDate">Date de début *</label>
+      <input type="date" id="startDate" name="startDate"
+             [(ngModel)]="project.startDate"
+             #dateCtrl="ngModel" required />
+      @if (dateCtrl.invalid && (dateCtrl.touched || dateCtrl.dirty)) {
+        <small class="error">La date de début est obligatoire.</small>
+      }
+    </div>
+  </fieldset>
+
+  <!-- ===== Groupe : Informations financières ===== -->
+  <fieldset ngModelGroup="financier" #financierGroup="ngModelGroup">
+    <legend>
+      Informations financières
+      <span class="badge" [class.ok]="financierGroup.valid">
+        {{ financierGroup.valid ? 'Valide' : 'Invalide' }}
+      </span>
+    </legend>
+
+    <div class="field">
+      <label for="budget">Budget (TND) *</label>
+      <input type="number" id="budget" name="budget"
+             [(ngModel)]="project.budget"
+             #budgetCtrl="ngModel" required min="0.01" />
+      @if (budgetCtrl.invalid && (budgetCtrl.touched || budgetCtrl.dirty)) {
+        @if (budgetCtrl.errors?.['required']) {
+          <small class="error">Le budget est obligatoire.</small>
+        }
+        @if (budgetCtrl.errors?.['min']) {
+          <small class="error">Le budget doit être supérieur à 0.</small>
+        }
+      }
+    </div>
+  </fieldset>
+
+  <!-- ===== Boutons ===== -->
+  <div class="actions">
+    <button type="submit" [disabled]="projectForm.invalid">
+      {{ isEditMode() ? 'Modifier le projet' : 'Ajouter le projet' }}
+    </button>
+    @if (isEditMode()) {
+      <button type="button" class="secondary" (click)="onCancel(projectForm)">Annuler</button>
+    }
+  </div>
+</form>
+
+<!-- Debug: overall state + state of each group -->
+<pre>Formulaire valide : {{ projectForm.valid }}
+Général : {{ generalGroup.valid }} | Financier : {{ financierGroup.valid }}
+{{ projectForm.value | json }}</pre>

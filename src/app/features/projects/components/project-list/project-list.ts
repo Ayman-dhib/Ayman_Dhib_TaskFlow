@@ -1,33 +1,35 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Project } from '../../models/project.model';
-import { TaskStatus } from '../../models/task.model';                 // NEW import
+import { TaskStatus } from '../../models/task.model';
 import { ProjectCard } from '../project-card/project-card';
+import { ProjectForm } from '../project-form/project-form';
 import { ProjectService } from '../../../../core/services/project.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-project-list',
-  imports: [ProjectCard, FormsModule],
+  imports: [ProjectCard, FormsModule, ProjectForm],
   templateUrl: './project-list.html',
   styleUrl: './project-list.css',
 })
 export class ProjectList implements OnInit {
   private projectService = inject(ProjectService);
-  private notification = inject ( NotificationService)
-
-   constructor() {
-    console.log('ProjectList → ProjectService id =', this.projectService.id);
-  }
-
+  private notification = inject(NotificationService);
 
   projects = signal<Project[]>([]);
   searchTerm = signal('');
+  selectedProject = signal<Project | null>(null);
+  showForm = signal(false);
 
   filteredProjects = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
     return this.projects().filter(p => p.name.toLowerCase().includes(term));
   });
+
+  constructor() {
+    console.log('ProjectList → ProjectService id =', this.projectService.id);
+  }
 
   ngOnInit(): void {
     this.projectService.getProjects().subscribe(projects => {
@@ -35,41 +37,52 @@ export class ProjectList implements OnInit {
     });
   }
 
-  addProject(): void {
-    this.projects.update(list => {
-      const nextId = list.length ? Math.max(...list.map(p => p.id)) + 1 : 1;
-      return [
-        {
-          id: nextId,
-          name: `Projet ${nextId}`,
-          description: 'Nouveau projet',
-          status: 'En attente',
-          tasks: [],
-          startDate: new Date().toISOString().slice(0, 10),
-          budget: 0,
-        },
-        ...list,
-      ];
-    });
-    this.searchTerm.set('');
-    this.notification.show ('Project added !!!')
+  // ---- Form: creation / editing ----
+  openCreate(): void {
+    this.selectedProject.set(null);
+    this.showForm.update(v => !v);
   }
 
+  onEdit(project: Project): void {
+    this.selectedProject.set(project);
+    this.showForm.set(true);
+  }
 
-onTaskStatusChange(event: { projectId: number; taskId: number; status: TaskStatus }) {
-  this.projects.update(list =>
-    list.map(project =>
-      project.id !== event.projectId
-        ? project                                   // untouched project: same object
-        : {
-            ...project,                             // NEW project object
-            tasks: project.tasks.map(task =>
-              task.id !== event.taskId
-                ? task                              // untouched task: same object
-                : { ...task, status: event.status } // NEW task object
-            ),
-          }
-    )
-  );
-}
+  onSave(project: Project): void {
+    if (project.id) {
+      // modification
+      this.projects.update(list => list.map(p => (p.id === project.id ? project : p)));
+      this.notification.show('Projet modifié !');
+    } else {
+      // création
+      this.projects.update(list => {
+        const nextId = list.length ? Math.max(...list.map(p => p.id)) + 1 : 1;
+        return [{ ...project, id: nextId }, ...list];
+      });
+      this.searchTerm.set('');
+      this.notification.show('Projet ajouté !');
+    }
+    this.closeForm();
+  }
+
+  closeForm(): void {
+    this.selectedProject.set(null);
+    this.showForm.set(false);
+  }
+
+  // ---- Tasks ----
+  onTaskStatusChange(event: { projectId: number; taskId: number; status: TaskStatus }) {
+    this.projects.update(list =>
+      list.map(project =>
+        project.id !== event.projectId
+          ? project
+          : {
+              ...project,
+              tasks: project.tasks.map(task =>
+                task.id !== event.taskId ? task : { ...task, status: event.status }
+              ),
+            }
+      )
+    );
+  }
 }
