@@ -1,59 +1,59 @@
-# TaskFlow
+<div align="center">
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.1.
+# ✅ TaskFlow
 
-## Development server
+**Project and task management app built with Angular**
 
-To start a local development server, run:
+![Angular](https://img.shields.io/badge/Angular_22-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![RxJS](https://img.shields.io/badge/RxJS-B7178C?style=for-the-badge&logo=reactivex&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
 
-```bash
-ng serve
-```
+</div>
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Overview
 
-## Code scaffolding
+TaskFlow organizes projects, their tasks and the people working on them. I built it during my Angular course labs at ISIMS. It uses a feature-based Angular architecture with services, a project store, reusable components, custom pipes and directives, and a mock REST API powered by `json-server`.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Features
 
-```bash
-ng generate component component-name
-```
+- **Projects**: create, edit and browse projects in list or card view
+- **Tasks**: task list per project, with **overdue** tasks highlighted automatically
+- **Users**: team members and the projects they belong to
+- **Favorites and recent projects**: quick access to what you use most
+- **Notifications** for user actions
+- **Light/dark theme**
+- **Custom pipes**: deadline, initials, truncate
+- **Custom directives**: highlight, overdue, tooltip
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Tech stack
 
-```bash
-ng generate --help
-```
+| Layer | Technologies |
+|---|---|
+| Front-end | Angular 22, TypeScript, RxJS, Tailwind CSS 4 |
+| Mock API | json-server (`db.json`) |
+| Tests | Vitest |
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Getting started
 
 ```bash
-ng test
+npm install
+npm run dev     # starts json-server (port 3000) and Angular (port 4200) together
 ```
 
-## Running end-to-end tests
+Or run them separately: `npm run server`, then `npm start`. Run the tests with `npm test`.
 
-For end-to-end (e2e) testing, run:
+## Project structure
 
-```bash
-ng e2e
+```
+src/app/
+  core/services/      projects, users, favorites, recent projects, notifications, theme
+  features/projects/  project list, card and form, task list and items, models, store
+  features/users/     user list, user card, projects grouped by user
+  shared/             empty state, view toggle, pipes, directives
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Built by [Ayman Dhib](https://www.linkedin.com/in/ayman-dhib/)
